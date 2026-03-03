@@ -40,6 +40,9 @@ Rules and guidelines for AI assistants when working on my projects.
 5. **Modular Terraform** — Use modules to keep code DRY and reusable. Separate environments using workspaces or directory structure.
 6. **Variables and outputs** — Use `variables.tf` and `outputs.tf` in every module. No hardcoded values.
 7. **State locking** — Always enable state locking via Azure Blob lease when configuring the backend.
+8. **Follow the naming standard** — All Azure resources must be named according to the [Naming Convention Standard](naming-convention.md). No exceptions.
+9. **Unlisted resources require proposal** — If deploying a resource not yet in the naming standard, propose a name based on [Microsoft CAF abbreviations](https://learn.microsoft.com/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations), add it to the Pending Approvals table in the naming convention, and get approval before deploying.
+10. **Tagging is mandatory** — All resources must include the required tags as defined in the naming convention.
 
 ---
 
@@ -50,7 +53,7 @@ Rules and guidelines for AI assistants when working on my projects.
 - Tools: Terraform, GitHub Actions, Azure CLI
 - Backend: Azure Storage Account (remote state)
 - Deployment: GitHub Actions workflows only
-- Naming convention: `<project>-<environment>-<resource>` (e.g., `myapp-prod-rg`)
+- Naming convention: See [naming-convention.md](naming-convention.md)
 
 ---
 
