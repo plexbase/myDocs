@@ -17,17 +17,17 @@ All Azure resources follow this pattern:
 | **Abbreviation** | Resource type prefix from Microsoft CAF | `rg`, `vm`, `st`, `vnet` |
 | **Workload/Project** | Application or project name | `myapp`, `shared`, `hub` |
 | **Environment** | Deployment environment | `prod`, `dev`, `test`, `staging` |
-| **Region** | Azure region short name | `we` (West Europe), `ne` (North Europe), `eus` (East US) |
+| **Region** | Azure region short name (default: `sc` for Sweden Central) | `sc` (Sweden Central), `we` (West Europe), `ne` (North Europe), `eus` (East US) |
 | **Instance** | Instance number (when multiples exist) | `001`, `002` |
 
 ### Examples
 
 ```
-rg-myapp-prod-we-001         # Resource group
-vnet-myapp-prod-we-001       # Virtual network
-st-myapp-prod-we-001         # Storage account (no hyphens allowed: stmyappprodwe001)
-kv-myapp-prod-we-001         # Key Vault
-vm-myapp-prod-we-001         # Virtual machine
+rg-myapp-prod-sc-001         # Resource group
+vnet-myapp-prod-sc-001       # Virtual network
+st-myapp-prod-sc-001         # Storage account (no hyphens allowed: stmyappprodsc001)
+kv-myapp-prod-sc-001         # Key Vault
+vm-myapp-prod-sc-001         # Virtual machine
 ```
 
 ---
@@ -51,7 +51,7 @@ Some Azure resources have specific constraints:
 
 | Constraint | Affected Resources | Rule |
 |------------|--------------------|------|
-| **No hyphens** | Storage Accounts, Key Vaults (optional) | Concatenate components: `stmyappprodwe001` |
+| **No hyphens** | Storage Accounts, Key Vaults (optional) | Concatenate components: `stmyappprodsc001` |
 | **Globally unique** | Storage Accounts, Key Vaults, Web Apps | Add a short unique suffix if needed |
 | **Max 24 chars** | Storage Accounts | Shorten components to fit |
 | **Max 15 chars** | Windows VM computer names | Use abbreviated names: `vm-myapp-p-001` |
@@ -73,17 +73,34 @@ Some Azure resources have specific constraints:
 
 ## Region Abbreviations
 
-| Azure Region | Abbreviation |
-|--------------|-------------|
-| West Europe | `we` |
-| North Europe | `ne` |
-| East US | `eus` |
-| East US 2 | `eus2` |
-| West US | `wus` |
-| UK South | `uks` |
-| Norway East | `noe` |
+| Azure Region | Abbreviation | Notes |
+|--------------|-------------|-------|
+| **Sweden Central** | **`sc`** | **Default region for all deployments** |
+| West Europe | `we` | |
+| North Europe | `ne` | |
+| East US | `eus` | |
+| East US 2 | `eus2` | |
+| West US | `wus` | |
+| UK South | `uks` | |
+| Norway East | `noe` | |
 
 > Add regions as needed for your deployments.
+
+### Default Region Policy
+
+**Sweden Central (`swedencentral`) is the default Azure region for all deployments.**
+
+All resources must be deployed to Sweden Central unless there is a specific, documented reason not to. Valid exceptions include:
+
+- The required resource type or SKU is not available in Sweden Central
+- Data residency or compliance requirements mandate a different region
+- Latency requirements dictate proximity to a specific geographic area
+- A dependent resource already exists in another region and cross-region is not viable
+
+> **WARNING:** If a resource is deployed to any region other than Sweden Central, it **must** be explicitly flagged with:
+> 1. A comment in the Terraform code explaining why
+> 2. The tag `region-exception: <reason>` on the resource
+> 3. A note in the deployment PR describing the exception
 
 ---
 
@@ -95,7 +112,7 @@ Based on [Microsoft CAF abbreviation recommendations](https://learn.microsoft.co
 
 | Resource | Abbreviation | Example |
 |----------|-------------|---------|
-| Resource Group | `rg` | `rg-myapp-prod-we-001` |
+| Resource Group | `rg` | `rg-myapp-prod-sc-001` |
 | Management Group | `mg` | `mg-platform-prod` |
 | Policy Definition | *descriptive* | `policy-require-tags` |
 
@@ -103,98 +120,98 @@ Based on [Microsoft CAF abbreviation recommendations](https://learn.microsoft.co
 
 | Resource | Abbreviation | Example |
 |----------|-------------|---------|
-| Virtual Network | `vnet` | `vnet-myapp-prod-we-001` |
-| Subnet | `snet` | `snet-frontend-prod-we-001` |
-| Network Security Group | `nsg` | `nsg-frontend-prod-we-001` |
-| Network Interface | `nic` | `nic-vm01-prod-we-001` |
-| Public IP Address | `pip` | `pip-myapp-prod-we-001` |
-| Load Balancer (internal) | `lbi` | `lbi-myapp-prod-we-001` |
-| Load Balancer (external) | `lbe` | `lbe-myapp-prod-we-001` |
-| Application Gateway | `agw` | `agw-myapp-prod-we-001` |
-| Route Table | `rt` | `rt-myapp-prod-we-001` |
-| NAT Gateway | `ng` | `ng-myapp-prod-we-001` |
-| Private Endpoint | `pep` | `pep-st-myapp-prod-we-001` |
-| VPN Gateway | `vpng` | `vpng-hub-prod-we-001` |
+| Virtual Network | `vnet` | `vnet-myapp-prod-sc-001` |
+| Subnet | `snet` | `snet-frontend-prod-sc-001` |
+| Network Security Group | `nsg` | `nsg-frontend-prod-sc-001` |
+| Network Interface | `nic` | `nic-vm01-prod-sc-001` |
+| Public IP Address | `pip` | `pip-myapp-prod-sc-001` |
+| Load Balancer (internal) | `lbi` | `lbi-myapp-prod-sc-001` |
+| Load Balancer (external) | `lbe` | `lbe-myapp-prod-sc-001` |
+| Application Gateway | `agw` | `agw-myapp-prod-sc-001` |
+| Route Table | `rt` | `rt-myapp-prod-sc-001` |
+| NAT Gateway | `ng` | `ng-myapp-prod-sc-001` |
+| Private Endpoint | `pep` | `pep-st-myapp-prod-sc-001` |
+| VPN Gateway | `vpng` | `vpng-hub-prod-sc-001` |
 | Virtual Network Peering | `peer` | `peer-hub-to-spoke-prod` |
-| Azure Firewall | `afw` | `afw-hub-prod-we-001` |
-| Azure Bastion | `bas` | `bas-hub-prod-we-001` |
+| Azure Firewall | `afw` | `afw-hub-prod-sc-001` |
+| Azure Bastion | `bas` | `bas-hub-prod-sc-001` |
 
 ### Compute
 
 | Resource | Abbreviation | Example |
 |----------|-------------|---------|
-| Virtual Machine | `vm` | `vm-web-prod-we-001` |
-| VM Scale Set | `vmss` | `vmss-web-prod-we-001` |
-| Availability Set | `avail` | `avail-web-prod-we-001` |
-| Managed Disk (OS) | `osdisk` | `osdisk-vm01-prod-we-001` |
-| Managed Disk (data) | `disk` | `disk-vm01-prod-we-001` |
-| App Service Plan | `asp` | `asp-myapp-prod-we-001` |
-| Web App | `app` | `app-myapp-prod-we-001` |
-| Function App | `func` | `func-myapp-prod-we-001` |
-| Static Web App | `stapp` | `stapp-myapp-prod-we-001` |
+| Virtual Machine | `vm` | `vm-web-prod-sc-001` |
+| VM Scale Set | `vmss` | `vmss-web-prod-sc-001` |
+| Availability Set | `avail` | `avail-web-prod-sc-001` |
+| Managed Disk (OS) | `osdisk` | `osdisk-vm01-prod-sc-001` |
+| Managed Disk (data) | `disk` | `disk-vm01-prod-sc-001` |
+| App Service Plan | `asp` | `asp-myapp-prod-sc-001` |
+| Web App | `app` | `app-myapp-prod-sc-001` |
+| Function App | `func` | `func-myapp-prod-sc-001` |
+| Static Web App | `stapp` | `stapp-myapp-prod-sc-001` |
 
 ### Containers
 
 | Resource | Abbreviation | Example |
 |----------|-------------|---------|
-| AKS Cluster | `aks` | `aks-myapp-prod-we-001` |
-| Container Registry | `cr` | `crmyappprodwe001` |
-| Container Instance | `ci` | `ci-myapp-prod-we-001` |
-| Container App | `ca` | `ca-myapp-prod-we-001` |
+| AKS Cluster | `aks` | `aks-myapp-prod-sc-001` |
+| Container Registry | `cr` | `crmyappprodsc001` |
+| Container Instance | `ci` | `ci-myapp-prod-sc-001` |
+| Container App | `ca` | `ca-myapp-prod-sc-001` |
 
 ### Storage
 
 | Resource | Abbreviation | Example |
 |----------|-------------|---------|
-| Storage Account | `st` | `stmyappprodwe001` |
+| Storage Account | `st` | `stmyappprodsc001` |
 | File Share | `share` | `share-config-prod` |
-| Backup Vault | `bvault` | `bvault-myapp-prod-we-001` |
+| Backup Vault | `bvault` | `bvault-myapp-prod-sc-001` |
 
 ### Databases
 
 | Resource | Abbreviation | Example |
 |----------|-------------|---------|
-| Azure SQL Server | `sql` | `sql-myapp-prod-we-001` |
-| Azure SQL Database | `sqldb` | `sqldb-myapp-prod-we-001` |
-| Cosmos DB | `cosmos` | `cosmos-myapp-prod-we-001` |
-| PostgreSQL | `psql` | `psql-myapp-prod-we-001` |
-| MySQL | `mysql` | `mysql-myapp-prod-we-001` |
-| Redis Cache | `redis` | `redis-myapp-prod-we-001` |
+| Azure SQL Server | `sql` | `sql-myapp-prod-sc-001` |
+| Azure SQL Database | `sqldb` | `sqldb-myapp-prod-sc-001` |
+| Cosmos DB | `cosmos` | `cosmos-myapp-prod-sc-001` |
+| PostgreSQL | `psql` | `psql-myapp-prod-sc-001` |
+| MySQL | `mysql` | `mysql-myapp-prod-sc-001` |
+| Redis Cache | `redis` | `redis-myapp-prod-sc-001` |
 
 ### Security & Identity
 
 | Resource | Abbreviation | Example |
 |----------|-------------|---------|
-| Key Vault | `kv` | `kv-myapp-prod-we-001` |
-| Managed Identity | `id` | `id-myapp-prod-we-001` |
-| SSH Key | `sshkey` | `sshkey-vm01-prod-we-001` |
+| Key Vault | `kv` | `kv-myapp-prod-sc-001` |
+| Managed Identity | `id` | `id-myapp-prod-sc-001` |
+| SSH Key | `sshkey` | `sshkey-vm01-prod-sc-001` |
 
 ### Monitoring & Management
 
 | Resource | Abbreviation | Example |
 |----------|-------------|---------|
-| Log Analytics Workspace | `log` | `log-myapp-prod-we-001` |
-| Application Insights | `appi` | `appi-myapp-prod-we-001` |
-| Automation Account | `aa` | `aa-myapp-prod-we-001` |
-| Action Group | `ag` | `ag-myapp-prod-we-001` |
-| Recovery Services Vault | `rsv` | `rsv-myapp-prod-we-001` |
+| Log Analytics Workspace | `log` | `log-myapp-prod-sc-001` |
+| Application Insights | `appi` | `appi-myapp-prod-sc-001` |
+| Automation Account | `aa` | `aa-myapp-prod-sc-001` |
+| Action Group | `ag` | `ag-myapp-prod-sc-001` |
+| Recovery Services Vault | `rsv` | `rsv-myapp-prod-sc-001` |
 
 ### Integration
 
 | Resource | Abbreviation | Example |
 |----------|-------------|---------|
-| API Management | `apim` | `apim-myapp-prod-we-001` |
-| Logic App | `logic` | `logic-myapp-prod-we-001` |
-| Service Bus Namespace | `sbns` | `sbns-myapp-prod-we-001` |
-| Event Hub Namespace | `evhns` | `evhns-myapp-prod-we-001` |
+| API Management | `apim` | `apim-myapp-prod-sc-001` |
+| Logic App | `logic` | `logic-myapp-prod-sc-001` |
+| Service Bus Namespace | `sbns` | `sbns-myapp-prod-sc-001` |
+| Event Hub Namespace | `evhns` | `evhns-myapp-prod-sc-001` |
 
 ### AI & Machine Learning
 
 | Resource | Abbreviation | Example |
 |----------|-------------|---------|
-| Azure OpenAI Service | `oai` | `oai-myapp-prod-we-001` |
-| AI Search | `srch` | `srch-myapp-prod-we-001` |
-| ML Workspace | `mlw` | `mlw-myapp-prod-we-001` |
+| Azure OpenAI Service | `oai` | `oai-myapp-prod-sc-001` |
+| AI Search | `srch` | `srch-myapp-prod-sc-001` |
+| ML Workspace | `mlw` | `mlw-myapp-prod-sc-001` |
 
 ---
 

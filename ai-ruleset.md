@@ -43,6 +43,7 @@ Rules and guidelines for AI assistants when working on my projects.
 8. **Follow the naming standard** — All Azure resources must be named according to the [Naming Convention Standard](naming-convention.md). No exceptions.
 9. **Unlisted resources require proposal** — If deploying a resource not yet in the naming standard, propose a name based on [Microsoft CAF abbreviations](https://learn.microsoft.com/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations), add it to the Pending Approvals table in the naming convention, and get approval before deploying.
 10. **Tagging is mandatory** — All resources must include the required tags as defined in the naming convention.
+11. **Default region is Sweden Central** — All resources must be deployed to `swedencentral` unless there is a documented exception. If deploying elsewhere, add a Terraform comment explaining why, apply the `region-exception` tag, and note it in the PR.
 
 ---
 
