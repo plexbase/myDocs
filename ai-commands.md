@@ -10,6 +10,7 @@ A collection of prompts, commands, and templates for working with AI assistants.
 - [Code Review](#code-review)
 - [Documentation](#documentation)
 - [Troubleshooting](#troubleshooting)
+- [Terraform](#terraform)
 
 ---
 
@@ -57,6 +58,42 @@ Include usage examples and parameter descriptions.
 I'm getting the following error: [paste error]. 
 Here is the relevant code: [paste code]. 
 Explain the cause and suggest a fix.
+```
+
+---
+
+## Terraform
+
+### Template: Create a new Terraform module
+```
+Create a Terraform module for [resource type] in Azure.
+Use azurerm provider. Include variables.tf, outputs.tf, and main.tf.
+Follow naming convention: <project>-<environment>-<resource>.
+Remote state backend is in Azure Storage Account.
+```
+
+### Template: Add a resource to existing Terraform
+```
+Add a [resource type] to the existing Terraform configuration in [directory].
+Follow the existing code style and variable patterns.
+Do not deploy directly — this will go through GitHub Actions.
+```
+
+### Template: Create GitHub Actions workflow for Terraform
+```
+Create a GitHub Actions workflow that:
+1. Runs terraform fmt and validate on pull requests
+2. Runs terraform plan and posts the output as a PR comment
+3. Runs terraform apply on merge to main
+Use OIDC authentication with Azure.
+```
+
+### Template: Bootstrap Terraform backend
+```
+Create a script to bootstrap the Terraform remote state backend:
+- Resource group, storage account, and blob container in Azure
+- Enable state locking
+- Output the backend configuration block
 ```
 
 ---

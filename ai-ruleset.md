@@ -31,14 +31,26 @@ Rules and guidelines for AI assistants when working on my projects.
 
 ---
 
+## Infrastructure & Deployment Rules
+
+1. **Terraform is the standard** — All infrastructure must be defined as Terraform code. No manual resource creation in Azure.
+2. **Remote state in Azure Storage** — Terraform state files must be stored in an Azure Storage Account backend, never locally.
+3. **Deploy via GitHub Actions only** — All deployments to Azure must go through GitHub Actions pipelines. No direct `az` CLI deployments or portal changes for production resources.
+4. **No direct Azure changes** — Never create, modify, or delete Azure resources directly. Always go through Terraform + GitHub Actions.
+5. **Modular Terraform** — Use modules to keep code DRY and reusable. Separate environments using workspaces or directory structure.
+6. **Variables and outputs** — Use `variables.tf` and `outputs.tf` in every module. No hardcoded values.
+7. **State locking** — Always enable state locking via Azure Blob lease when configuring the backend.
+
+---
+
 ## Project-Specific Rules
 
-<!-- Add rules specific to individual projects below -->
-
-### Project: [Project Name]
-- Language: 
-- Framework: 
-- Special rules: 
+### Project: Infrastructure (Terraform)
+- Language: HCL (Terraform)
+- Tools: Terraform, GitHub Actions, Azure CLI
+- Backend: Azure Storage Account (remote state)
+- Deployment: GitHub Actions workflows only
+- Naming convention: `<project>-<environment>-<resource>` (e.g., `myapp-prod-rg`)
 
 ---
 
